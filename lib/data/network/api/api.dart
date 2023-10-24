@@ -10,7 +10,6 @@ abstract class Api {
 }
 
 class ApiImp extends Api {
-
   String buildUrl(String url) {
     String result = '${Constants.apiUrl}$url&api_key=${Constants.apiKey}';
     return result;
@@ -21,17 +20,19 @@ class ApiImp extends Api {
     final String url = 'movie/popular?language=en-US&page=$page';
 
     final response = await http.get(Uri.parse(buildUrl(url)));
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      final data = json.decode(response.body);
-      final results = (data['results'] as List).map((e) => MovieResponse.fromMap(e)).toList();
-      return results;
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load popular movies');
+    switch (response.statusCode) {
+      case 200:
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+        final data = json.decode(response.body);
+        final results = (data['results'] as List)
+            .map((e) => MovieResponse.fromMap(e))
+            .toList();
+        return results;
+      default:
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to load popular movies');
     }
   }
-
 }

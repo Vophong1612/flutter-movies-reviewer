@@ -10,26 +10,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*List<Movie> movies = [
-      Movie(
-        releaseDate: "2023-07-03",
-        title: "Sound of Freedom 1",
-        posterPath: "/qA5kPYZA7FkVvqcEfJRoOy4kpHg.jpg",
-        voteAverage: 7,
-      ),
-      Movie(
-        releaseDate: "2023-07-04",
-        title: "Sound of Freedom 2",
-        posterPath: "/qA5kPYZA7FkVvqcEfJRoOy4kpHg.jpg",
-        voteAverage: 6,
-      ),
-      Movie(
-        releaseDate: "2023-07-05",
-        title: "Sound of Freedom 3",
-        posterPath: "/qA5kPYZA7FkVvqcEfJRoOy4kpHg.jpg",
-        voteAverage: 9,
-      ),
-    ];*/
     final cs = Theme.of(context).colorScheme;
     final ts = Theme.of(context).textTheme;
     final screenWidth = MediaQuery.of(context).size.width;
