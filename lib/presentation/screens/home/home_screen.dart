@@ -47,6 +47,16 @@ class HomeScreen extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                         ),
                       );
+                    } else if (state is PopularMoviesFailureState) {
+                      return SizedBox(
+                        height: screenWidth > 500 ? 800 : 500,
+                        child: Center(
+                          child: Text(
+                            "Some thing went wrong: \n${state.exception.toString()}",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
                     } else {
                       return SizedBox(
                         height: screenWidth > 500 ? 800 : 500,

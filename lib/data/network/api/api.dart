@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter_movies_reviewer/data/dto/get_popular_movies_respone.dart';
 import 'package:flutter_movies_reviewer/data/network/constants.dart';
+import 'package:flutter_movies_reviewer/domain/models/movie.dart';
+import 'package:flutter_movies_reviewer/domain/result.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:flutter_movies_reviewer/data/dto/get_popular_movies_respone.dart';
-
 abstract class Api {
-  Future<List<MovieResponse>> getPopularMovie(int page);
+  Future<APIResult<List<Movie>>> getPopularMovie(int page);
 }
 
 class ApiImp extends Api {
@@ -16,23 +17,27 @@ class ApiImp extends Api {
   }
 
   @override
-  Future<List<MovieResponse>> getPopularMovie(int page) async {
+  Future<APIResult<List<Movie>>> getPopularMovie(int page) async {
     final String url = 'movie/popular?language=en-US&page=$page';
 
-    final response = await http.get(Uri.parse(buildUrl(url)));
-    switch (response.statusCode) {
-      case 200:
+    try {
+      final response = await http.get(Uri.parse(buildUrl(url)));
+      switch (response.statusCode) {
+        case 200:
         // If the server did return a 200 OK response,
         // then parse the JSON.
-        final data = json.decode(response.body);
-        final results = (data['results'] as List)
-            .map((e) => MovieResponse.fromMap(e))
-            .toList();
-        return results;
-      default:
+          final data = json.decode(response.body);
+          final results = (data['results'] as List)
+              .map((e) => MovieResponse.fromMap(e))
+              .toList();
+          return APISuccess(results);
+        default:
         // If the server did not return a 200 OK response,
-        // then throw an exception.
-        throw Exception('Failed to load popular movies');
+        // then return error
+          return APIFailure(Exception('Failed to load popular movies'));
+      }
+    } on Exception catch (ex) {
+      return APIFailure(ex);
     }
   }
 }

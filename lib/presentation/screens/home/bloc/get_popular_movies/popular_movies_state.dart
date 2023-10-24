@@ -12,3 +12,8 @@ class PopularMoviesSuccessState extends PopularMoviesState {
 
   PopularMoviesSuccessState({required this.movies});
 }
+
+class PopularMoviesFailureState extends PopularMoviesState {
+  final Exception exception;
+  PopularMoviesFailureState({required this.exception});
+}

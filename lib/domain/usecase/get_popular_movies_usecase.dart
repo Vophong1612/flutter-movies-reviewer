@@ -1,5 +1,6 @@
 import 'package:flutter_movies_reviewer/domain/models/movie.dart';
 import 'package:flutter_movies_reviewer/domain/repository/movie_repository.dart';
+import 'package:flutter_movies_reviewer/domain/result.dart';
 
 class GetPopularMoviesUseCase {
   const GetPopularMoviesUseCase({required MovieRepository movieRepository})
@@ -7,5 +8,5 @@ class GetPopularMoviesUseCase {
 
   final MovieRepository _movieRepository;
 
-  Future<List<Movie>> invoke({int page = 1}) async => await _movieRepository.getPopularMovies(page: page);
+  Future<APIResult<List<Movie>>> invoke({int page = 1}) async => await _movieRepository.getPopularMovies(page: page);
 }
