@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie.dart';
 import 'package:flutter_movies_reviewer/domain/utils/custom_date_utils.dart';
+import 'package:flutter_movies_reviewer/domain/utils/number_utils.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/home/bloc/get_popular_movies/popular_movies_bloc.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/home/widgets/popular_movies/popular_widgets_item.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -99,7 +100,6 @@ class _Content extends StatefulWidget {
 }
 
 class __ContentState extends State<_Content> {
-
   late Movie _currentMovie;
 
   void _updateCurrentMovie(Movie movie) {
@@ -191,7 +191,7 @@ class __ContentState extends State<_Content> {
                               width: 10,
                             ),
                             Text(
-                              "${_currentMovie.voteAverage ?? 0}/10",
+                              "${_currentMovie.voteAverage != null ? (_currentMovie.voteAverage! / 1).toPrecision(2) : 0}/10",
                               style: ts.bodyMedium?.copyWith(
                                 color: cs.onPrimaryContainer,
                               ),
