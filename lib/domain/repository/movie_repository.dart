@@ -3,4 +3,5 @@ import 'package:flutter_movies_reviewer/domain/result.dart';
 
 abstract class MovieRepository {
   Future<APIResult<List<Movie>>> getPopularMovies({int page});
+  Future<APIResult<List<Movie>>> getTopRatedMovies({int page});
 }

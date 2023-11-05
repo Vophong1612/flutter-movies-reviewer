@@ -7,7 +7,8 @@ import 'package:flutter_movies_reviewer/domain/result.dart';
 import 'package:http/http.dart' as http;
 
 abstract class Api {
-  Future<APIResult<List<Movie>>> getPopularMovie(int page);
+  Future<APIResult<List<Movie>>> getPopularMovies(int page);
+  Future<APIResult<List<Movie>>> getTopRatedMovies(int page);
 }
 
 class ApiImp extends Api {
@@ -17,9 +18,20 @@ class ApiImp extends Api {
   }
 
   @override
-  Future<APIResult<List<Movie>>> getPopularMovie(int page) async {
+  Future<APIResult<List<Movie>>> getPopularMovies(int page) async {
     final String url = 'movie/popular?language=en-US&page=$page';
 
+    return await _getMoviesList(url, page);
+  }
+
+  @override
+  Future<APIResult<List<Movie>>> getTopRatedMovies(int page) async {
+    final String url = 'movie/popular?language=en-US&page=$page';
+
+    return await _getMoviesList(url, page);
+  }
+
+  Future<APIResult<List<Movie>>> _getMoviesList(String url, int page) async {
     try {
       final response = await http.get(Uri.parse(buildUrl(url)));
       switch (response.statusCode) {

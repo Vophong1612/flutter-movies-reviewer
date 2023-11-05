@@ -12,9 +12,9 @@ part 'popular_movies_event.dart';
 part 'popular_movies_state.dart';
 
 class PopularMoviesBloc extends Bloc<PopularMoviesEvent, PopularMoviesState> {
-  PopularMoviesBloc(
-      {required GetPopularMoviesUseCase getPopularMoviesUseCase}
-      ): _getPopularMoviesUseCase = getPopularMoviesUseCase,
+  PopularMoviesBloc({
+    required GetPopularMoviesUseCase getPopularMoviesUseCase,
+  })  : _getPopularMoviesUseCase = getPopularMoviesUseCase,
         super(PopularMoviesInitialState()) {
     on<GetPopularMoviesEvent>((event, emit) async {
       emit(PopularMoviesLoadingState());
@@ -35,7 +35,10 @@ class PopularMoviesBloc extends Bloc<PopularMoviesEvent, PopularMoviesState> {
 
   final GetPopularMoviesUseCase _getPopularMoviesUseCase;
 
-  Future<APIResult<List<Movie>>> _getPopularMovies(PopularMoviesEvent event, Emitter<PopularMoviesState> emit) async {
+  Future<APIResult<List<Movie>>> _getPopularMovies(
+    PopularMoviesEvent event,
+    Emitter<PopularMoviesState> emit,
+  ) async {
     final list = await _getPopularMoviesUseCase.invoke();
     return list;
   }
