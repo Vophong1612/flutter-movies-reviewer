@@ -11,6 +11,27 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    Widget content = screenWidth > 500
+        ? const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: PopularWidget()),
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: TopRatedWidget(),
+              )),
+            ],
+          )
+        : const Column(
+            children: [
+              PopularWidget(),
+              TopRatedWidget(),
+            ],
+          );
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<PopularMoviesBloc>(
@@ -26,15 +47,10 @@ class HomeScreen extends StatelessWidget {
             ..add(GetTopRatedMoviesEvent()),
         ),
       ],
-      child: const Scaffold(
+      child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                PopularWidget(),
-                TopRatedWidget(),
-              ],
-            ),
+            child: content,
           ),
         ),
       ),

@@ -13,7 +13,6 @@ class PopularWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     final cs = Theme.of(context).colorScheme;
     final ts = Theme.of(context).textTheme;
 
@@ -35,7 +34,7 @@ class PopularWidget extends StatelessWidget {
               }
             } else if (state is PopularMoviesFailureState) {
               return SizedBox(
-                height: screenWidth > 500 ? 800 : 500,
+                height: 500,
                 child: Center(
                   child: Text(
                     "Some thing went wrong: \n${state.exception.toString()}",
@@ -44,9 +43,9 @@ class PopularWidget extends StatelessWidget {
                 ),
               );
             } else {
-              return SizedBox(
-                height: screenWidth > 500 ? 800 : 500,
-                child: const Center(
+              return const SizedBox(
+                height: 500,
+                child: Center(
                   child: CircularProgressIndicator(),
                 ),
               );
