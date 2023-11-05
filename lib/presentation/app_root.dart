@@ -4,6 +4,7 @@ import 'package:flutter_movies_reviewer/data/network/api/api.dart';
 import 'package:flutter_movies_reviewer/data/repository/movie_repository_imp.dart';
 import 'package:flutter_movies_reviewer/data/use_cases.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_popular_movies_usecase.dart';
+import 'package:flutter_movies_reviewer/domain/usecase/get_top_rated_movies_usecase.dart';
 import 'package:flutter_movies_reviewer/presentation/router/app_router.dart';
 import 'package:flutter_movies_reviewer/presentation/theme.dart';
 
@@ -25,9 +26,13 @@ class _AppRootState extends State<AppRoot> {
     final api = ApiImp();
     final movieRepository = MovieRepositoryImp(api: api);
     final getPopularMoviesUseCase =
-    GetPopularMoviesUseCase(movieRepository: movieRepository);
+        GetPopularMoviesUseCase(movieRepository: movieRepository);
+    final getTopRatedMovieUseCase =
+        GetTopRatedMoviesUseCase(movieRepository: movieRepository);
 
-    useCases = UseCases(getPopularMoviesUseCase: getPopularMoviesUseCase);
+    useCases = UseCases(
+        getPopularMoviesUseCase: getPopularMoviesUseCase,
+        getTopRatedMoviesUseCase: getTopRatedMovieUseCase);
     super.initState();
   }
 
