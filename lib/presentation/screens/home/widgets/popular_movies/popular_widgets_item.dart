@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movies_reviewer/data/network/constants.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie.dart';
+import 'package:flutter_movies_reviewer/domain/utils/image_utils.dart';
 import 'package:flutter_movies_reviewer/presentation/router/navigator_utils.dart';
 
 class PopularWidgetItem extends StatelessWidget {
@@ -23,7 +23,7 @@ class PopularWidgetItem extends StatelessWidget {
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    "${Constants.rootPosterPath}${movie.posterPath}",
+                    ImageUtils.getFullPosterPath(movie.posterPath),
                   ),
                 ),
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movies_reviewer/data/network/constants.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie.dart';
 import 'package:flutter_movies_reviewer/domain/utils/custom_date_utils.dart';
+import 'package:flutter_movies_reviewer/domain/utils/image_utils.dart';
 import 'package:flutter_movies_reviewer/presentation/router/navigator_utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -25,7 +25,7 @@ class TopRatedWidgetItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network("${Constants.rootPosterPath}${movie.posterPath}"),
+            Image.network(ImageUtils.getFullPosterPath(movie.posterPath)),
             Text(
               movie.title ?? "",
               style: ts.titleMedium?.copyWith(
