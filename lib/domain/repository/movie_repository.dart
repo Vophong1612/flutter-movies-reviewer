@@ -6,4 +6,5 @@ abstract class MovieRepository {
   Future<APIResult<List<Movie>>> getPopularMovies({int page});
   Future<APIResult<List<Movie>>> getTopRatedMovies({int page});
   Future<APIResult<MovieDetail>> getMovieDetail({required int movieId});
+  Future<APIResult<List<Movie>>> getRecommendMovies({required int movieId, int page = 1});
 }

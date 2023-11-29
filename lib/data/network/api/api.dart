@@ -12,10 +12,12 @@ abstract class Api {
   Future<APIResult<List<Movie>>> getPopularMovies(int page);
   Future<APIResult<List<Movie>>> getTopRatedMovies(int page);
   Future<APIResult<MovieDetail>> getMovieDetail(int movieId);
+  Future<APIResult<List<Movie>>> getRecommendMovies(int movieId, int page);
 }
 
 class ApiImp extends Api {
   String buildUrl(String url) {
+    //todo: change parameter
     String result = '${Constants.apiUrl}$url&api_key=${Constants.apiKey}';
     print(result);
     return result;
@@ -78,5 +80,11 @@ class ApiImp extends Api {
     } on Exception catch (ex) {
       return APIFailure(ex);
     }
+  }
+
+  @override
+  Future<APIResult<List<Movie>>> getRecommendMovies(int movieId, int page) async {
+    String url = 'movie/$movieId/recommendations?language=en-US&page=$page';
+    return await _getMoviesList(url, page);
   }
 }
