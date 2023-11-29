@@ -7,6 +7,7 @@ import 'package:flutter_movies_reviewer/domain/utils/image_utils.dart';
 import 'package:flutter_movies_reviewer/domain/utils/number_utils.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/home/widgets/top_rated_movies/top_rated_widget_item.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/movie_detail/bloc/get_movie_detail/movie_detail_bloc.dart';
+import 'package:flutter_movies_reviewer/presentation/screens/movie_detail/bloc/recommend_movies/recommend_movies_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class MovieDetailArguments {
@@ -27,32 +28,76 @@ class MovieDetailWidget extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final ts = Theme.of(context).textTheme;
 
-    return BlocProvider<GetMovieDetailBloc>(
-      create: (ctx) => GetMovieDetailBloc(
-          getMovieDetailUseCase: ctx.read<UseCases>().getMovieDetailUseCase)
-        ..add(GetMovieDetailEvent(movieId: movieId)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GetMovieDetailBloc>(
+            create: (ctx) => GetMovieDetailBloc(
+                getMovieDetailUseCase:
+                    ctx.read<UseCases>().getMovieDetailUseCase)
+              ..add(GetMovieDetailEvent(movieId: movieId))),
+        BlocProvider<GetRecommendMoviesBloc>(
+            create: (ctx) => GetRecommendMoviesBloc(
+                getRecommendMoviesUseCase:
+                    ctx.read<UseCases>().getRecommendMoviesUseCase)
+              ..add(GetRecommendMoviesEvent(movieId: movieId))),
+      ],
       child: Scaffold(
         body: SafeArea(
           child: Stack(
             children: [
-              BlocBuilder<GetMovieDetailBloc, GetMovieDetailState>(
-                builder: (BuildContext context, GetMovieDetailState state) {
-                  if (state is GetMovieDetailSuccessState) {
-                    final movie = state.movieDetail;
-                    return _Content(movieDetail: movie);
-                  } else if (state is GetMovieDetailFailureState) {
-                    return Center(
-                      child: Text(
-                        state.exception.toString(),
-                        style: ts.bodyMedium!.copyWith(color: cs.onBackground),
+              SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      BlocBuilder<GetMovieDetailBloc, GetMovieDetailState>(
+                        builder:
+                            (BuildContext context, GetMovieDetailState state) {
+                          if (state is GetMovieDetailSuccessState) {
+                            final movie = state.movieDetail;
+                            return _Content(movieDetail: movie);
+                          } else if (state is GetMovieDetailFailureState) {
+                            return Center(
+                              child: Text(
+                                state.exception.toString(),
+                                style: ts.bodyMedium!
+                                    .copyWith(color: cs.onBackground),
+                              ),
+                            );
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
                       ),
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
+                      BlocBuilder<GetRecommendMoviesBloc,
+                          GetRecommendMoviesState>(
+                        builder: (BuildContext context,
+                            GetRecommendMoviesState state) {
+                          if (state is GetRecommendMovieSuccessState) {
+                            final movies = state.recommendMovies;
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, top: 20, right: 15),
+                              child: __ContentRecommendMovies(movies: movies),
+                            );
+                          }
+                          if (state is GetRecommendMovieFailureState) {
+                            return Center(
+                              child: Text(
+                                state.exception.toString(),
+                                style: ts.bodyMedium!
+                                    .copyWith(color: cs.onBackground),
+                              ),
+                            );
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      ),
+                    ]),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 15),
@@ -82,22 +127,20 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          __ContentPoster(path: movieDetail.backdropPath),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, top: 15, right: 15),
-            child: __ContentMovieInfo(movieDetail: movieDetail),
+    return Column(
+      children: [
+        __ContentPoster(path: movieDetail.backdropPath),
+        Padding(
+          padding: const EdgeInsets.only(left: 15, top: 15, right: 15),
+          child: __ContentMovieInfo(movieDetail: movieDetail),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 15, top: 20, right: 15),
+          child: __ContentOverview(
+            overview: movieDetail.overview,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, top: 20, right: 15),
-            child: __ContentOverview(
-              overview: movieDetail.overview,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -289,6 +332,46 @@ class ___ContentOverviewState extends State<__ContentOverview> {
             style: ts.bodyMedium!.copyWith(color: cs.onBackground),
             maxLines: showMore ? null : 4,
             overflow: showMore ? null : TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class __ContentRecommendMovies extends StatelessWidget {
+  final List<Movie> movies;
+
+  const __ContentRecommendMovies({super.key, required this.movies});
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final ts = Theme.of(context).textTheme;
+    final cs = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "People also see",
+          style: ts.bodyLarge!.copyWith(
+            fontWeight: FontWeight.bold,
+            color: cs.primary,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 5, bottom: 20),
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: screenWidth > 500 ? 4 : 2,
+              mainAxisSpacing: 5,
+              crossAxisSpacing: 5,
+              childAspectRatio: 1/2,
+            ),
+            itemBuilder: (context, index) => Center(child: TopRatedWidgetItem(movie: movies[index])),
+            itemCount: movies.length,
+            shrinkWrap: true,
           ),
         ),
       ],

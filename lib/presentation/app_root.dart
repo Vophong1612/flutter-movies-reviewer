@@ -5,6 +5,7 @@ import 'package:flutter_movies_reviewer/data/repository/movie_repository_imp.dar
 import 'package:flutter_movies_reviewer/data/use_cases.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_movie_detail_usecase.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_popular_movies_usecase.dart';
+import 'package:flutter_movies_reviewer/domain/usecase/get_recommend_movies_usecase.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_top_rated_movies_usecase.dart';
 import 'package:flutter_movies_reviewer/presentation/router/app_router.dart';
 import 'package:flutter_movies_reviewer/presentation/theme.dart';
@@ -32,11 +33,14 @@ class _AppRootState extends State<AppRoot> {
         GetTopRatedMoviesUseCase(movieRepository: movieRepository);
     final getMovieDetailUseCase =
         GetMovieDetailUseCase(movieRepository: movieRepository);
+    final getRecommendMoviesUseCase =
+        GetRecommendMoviesUseCase(movieRepository: movieRepository);
 
     useCases = UseCases(
         getPopularMoviesUseCase: getPopularMoviesUseCase,
         getTopRatedMoviesUseCase: getTopRatedMovieUseCase,
-        getMovieDetailUseCase: getMovieDetailUseCase);
+        getMovieDetailUseCase: getMovieDetailUseCase,
+        getRecommendMoviesUseCase: getRecommendMoviesUseCase);
     super.initState();
   }
 

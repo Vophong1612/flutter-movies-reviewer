@@ -20,12 +20,21 @@ class TopRatedWidgetItem extends StatelessWidget {
       height: 350,
       child: GestureDetector(
         onTap: () {
-          NavigatorUtils.instance.navigateToMovieDetailScreen(context, movie.id!);
+          NavigatorUtils.instance
+              .navigateToMovieDetailScreen(context, movie.id!);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(ImageUtils.getFullPosterPath(movie.posterPath)),
+            Image.network(
+              width: 150,
+              ImageUtils.getFullPosterPath(movie.posterPath),
+              errorBuilder: (_, __, ___) {
+                return Container(
+                  color: cs.onSurfaceVariant,
+                );
+              },
+            ),
             Text(
               movie.title ?? "",
               style: ts.titleMedium?.copyWith(
@@ -36,9 +45,7 @@ class TopRatedWidgetItem extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             RatingBarIndicator(
-              rating: movie.voteAverage == null
-                  ? 0
-                  : movie.voteAverage! / 2,
+              rating: movie.voteAverage == null ? 0 : movie.voteAverage! / 2,
               itemCount: 5,
               itemSize: 15,
               itemBuilder: (ctx, index) => const Icon(
@@ -47,9 +54,7 @@ class TopRatedWidgetItem extends StatelessWidget {
               ),
             ),
             Text(
-              CustomDateUtils.formatToDDMMMYYYY(
-                  movie.releaseDate) ??
-                  "",
+              CustomDateUtils.formatToDDMMMYYYY(movie.releaseDate) ?? "",
               style: ts.bodyMedium?.copyWith(
                 color: cs.onPrimaryContainer,
               ),

@@ -25,4 +25,8 @@ class MovieRepositoryImp extends MovieRepository {
     return await _api.getMovieDetail(movieId);
   }
 
+  @override
+  Future<APIResult<List<Movie>>> getRecommendMovies({required int movieId, int page = 1}) async {
+    return await _api.getRecommendMovies(movieId, page);
+  }
 }
