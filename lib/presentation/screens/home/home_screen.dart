@@ -9,8 +9,11 @@ import 'package:flutter_movies_reviewer/presentation/screens/home/widgets/top_ra
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  static const route = '/';
+
   @override
   Widget build(BuildContext context) {
+    print('homescreen build');
     final screenWidth = MediaQuery.of(context).size.width;
 
     Widget content = screenWidth > 500
