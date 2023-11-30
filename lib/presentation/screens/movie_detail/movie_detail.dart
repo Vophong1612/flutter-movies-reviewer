@@ -360,6 +360,7 @@ class __ContentRecommendMovies extends StatelessWidget {
             color: cs.primary,
           ),
         ),
+        movies.isNotEmpty ?
         Padding(
           padding: const EdgeInsets.only(top: 5, bottom: 20),
           child: GridView.builder(
@@ -373,6 +374,11 @@ class __ContentRecommendMovies extends StatelessWidget {
             itemBuilder: (context, index) => Center(child: TopRatedWidgetItem(movie: movies[index])),
             itemCount: movies.length,
             shrinkWrap: true,
+          ),
+        ) : const Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Center(
+            child: Text("No movies to recommend."),
           ),
         ),
       ],
