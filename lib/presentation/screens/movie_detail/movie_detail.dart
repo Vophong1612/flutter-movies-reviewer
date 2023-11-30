@@ -369,6 +369,7 @@ class __ContentRecommendMovies extends StatelessWidget {
               crossAxisSpacing: 5,
               childAspectRatio: 1/2,
             ),
+            physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) => Center(child: TopRatedWidgetItem(movie: movies[index])),
             itemCount: movies.length,
             shrinkWrap: true,
