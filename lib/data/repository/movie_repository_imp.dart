@@ -1,5 +1,6 @@
 import 'package:flutter_movies_reviewer/data/network/api/api.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie_detail.dart';
+import 'package:flutter_movies_reviewer/domain/models/movie_video.dart';
 import 'package:flutter_movies_reviewer/domain/result.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie.dart';
 
@@ -28,5 +29,10 @@ class MovieRepositoryImp extends MovieRepository {
   @override
   Future<APIResult<List<Movie>>> getRecommendMovies({required int movieId, int page = 1}) async {
     return await _api.getRecommendMovies(movieId, page);
+  }
+
+  @override
+  Future<APIResult<List<MovieVideo>>> getMovieVideos({required int movieId}) async {
+    return await _api.getMovieVideos(movieId);
   }
 }

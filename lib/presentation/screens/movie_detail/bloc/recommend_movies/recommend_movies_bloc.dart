@@ -22,7 +22,6 @@ class GetRecommendMoviesBloc
       final recommendMoviesResult = await _getRecommendMovies(event.movieId);
       switch (recommendMoviesResult) {
         case APISuccess<List<Movie>>():
-          print(recommendMoviesResult.value);
           final list = recommendMoviesResult.value;
           emit(GetRecommendMovieSuccessState(recommendMovies: list));
           break;

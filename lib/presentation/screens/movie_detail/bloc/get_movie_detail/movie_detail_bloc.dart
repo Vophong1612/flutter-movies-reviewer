@@ -22,13 +22,11 @@ class GetMovieDetailBloc
       final movieDetailResult = await _getMovieDetail(event.movieId);
       switch (movieDetailResult) {
         case APISuccess<MovieDetail>():
-          print(movieDetailResult.value);
           final detail = movieDetailResult.value;
           emit(GetMovieDetailSuccessState(movieDetail: detail));
           break;
         case APIFailure<MovieDetail>():
           final ex = movieDetailResult.exception;
-          print(ex);
           emit(GetMovieDetailFailureState(exception: ex));
           break;
       }

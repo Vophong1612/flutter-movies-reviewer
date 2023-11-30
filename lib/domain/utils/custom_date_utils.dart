@@ -16,4 +16,11 @@ class CustomDateUtils {
     DateTime date = DateTime.parse(inputDate);
     return date.year;
   }
+
+  static DateTime getDateTime(String? inputDate) {
+    if (inputDate == null) {
+      return DateTime.now();
+    }
+    return DateTime.parse(inputDate);
+  }
 }
