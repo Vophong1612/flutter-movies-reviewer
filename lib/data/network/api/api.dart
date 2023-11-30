@@ -16,54 +16,31 @@ abstract class Api {
 }
 
 class ApiImp extends Api {
-  String buildUrl(String url) {
-    //todo: change parameter
-    String result = '${Constants.apiUrl}$url&api_key=${Constants.apiKey}';
+  String buildUrl({required String url, String? parameters}) {
+    String result = '${Constants.apiUrl}$url?language=en-US&api_key=${Constants.apiKey}&$parameters';
     print(result);
     return result;
   }
 
   @override
   Future<APIResult<List<Movie>>> getPopularMovies(int page) async {
-    final String url = 'movie/popular?language=en-US&page=$page';
+    const String url = 'movie/popular';
 
     return await _getMoviesList(url, page);
   }
 
   @override
   Future<APIResult<List<Movie>>> getTopRatedMovies(int page) async {
-    final String url = 'movie/popular?language=en-US&page=$page';
+    const String url = 'movie/top_rated';
 
     return await _getMoviesList(url, page);
   }
 
-  Future<APIResult<List<Movie>>> _getMoviesList(String url, int page) async {
-    try {
-      final response = await http.get(Uri.parse(buildUrl(url)));
-      switch (response.statusCode) {
-        case 200:
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
-          final data = json.decode(response.body);
-          final results = (data['results'] as List)
-              .map((e) => MovieResponse.fromMap(e))
-              .toList();
-          return APISuccess(results);
-        default:
-        // If the server did not return a 200 OK response,
-        // then return error
-          return APIFailure(Exception('Failed to load popular movies'));
-      }
-    } on Exception catch (ex) {
-      return APIFailure(ex);
-    }
-  }
-
   @override
   Future<APIResult<MovieDetail>> getMovieDetail(int movieId) async {
-    final String url = 'movie/$movieId?language=en-US';
+    final String url = 'movie/$movieId';
     try {
-      final response = await http.get(Uri.parse(buildUrl(url)));
+      final response = await http.get(Uri.parse(buildUrl(url: url)));
       switch (response.statusCode) {
         case 200:
         // If the server did return a 200 OK response,
@@ -84,7 +61,30 @@ class ApiImp extends Api {
 
   @override
   Future<APIResult<List<Movie>>> getRecommendMovies(int movieId, int page) async {
-    String url = 'movie/$movieId/recommendations?language=en-US&page=$page';
+    String url = 'movie/$movieId/recommendations';
     return await _getMoviesList(url, page);
+  }
+
+  Future<APIResult<List<Movie>>> _getMoviesList(String url, int page) async {
+    try {
+      final parameter = 'page=$page';
+      final response = await http.get(Uri.parse(buildUrl(url: url, parameters: parameter)));
+      switch (response.statusCode) {
+        case 200:
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+          final data = json.decode(response.body);
+          final results = (data['results'] as List)
+              .map((e) => MovieResponse.fromMap(e))
+              .toList();
+          return APISuccess(results);
+        default:
+        // If the server did not return a 200 OK response,
+        // then return error
+          return APIFailure(Exception('Failed to load popular movies'));
+      }
+    } on Exception catch (ex) {
+      return APIFailure(ex);
+    }
   }
 }
