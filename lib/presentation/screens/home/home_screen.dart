@@ -13,7 +13,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('homescreen build');
     final screenWidth = MediaQuery.of(context).size.width;
 
     Widget content = screenWidth > 500

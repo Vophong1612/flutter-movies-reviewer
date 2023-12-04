@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter_movies_reviewer/data/dto/get_movie_detail_response.dart';
 import 'package:flutter_movies_reviewer/data/dto/get_popular_movies_respone.dart';
+import 'package:flutter_movies_reviewer/data/dto/movie_video_response.dart';
 import 'package:flutter_movies_reviewer/data/network/constants.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie_detail.dart';
+import 'package:flutter_movies_reviewer/domain/models/movie_video.dart';
 import 'package:flutter_movies_reviewer/domain/result.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,12 +15,12 @@ abstract class Api {
   Future<APIResult<List<Movie>>> getTopRatedMovies(int page);
   Future<APIResult<MovieDetail>> getMovieDetail(int movieId);
   Future<APIResult<List<Movie>>> getRecommendMovies(int movieId, int page);
+  Future<APIResult<List<MovieVideo>>> getMovieVideos(int movieId);
 }
 
 class ApiImp extends Api {
   String buildUrl({required String url, String? parameters}) {
     String result = '${Constants.apiUrl}$url?language=en-US&api_key=${Constants.apiKey}&$parameters';
-    print(result);
     return result;
   }
 
@@ -51,7 +53,6 @@ class ApiImp extends Api {
         default:
         // If the server did not return a 200 OK response,
         // then return error
-        print(response.statusCode);
           return APIFailure(Exception('Failed to get movie detail'));
       }
     } on Exception catch (ex) {
@@ -61,8 +62,32 @@ class ApiImp extends Api {
 
   @override
   Future<APIResult<List<Movie>>> getRecommendMovies(int movieId, int page) async {
-    String url = 'movie/$movieId/recommendations';
+    final String url = 'movie/$movieId/recommendations';
     return await _getMoviesList(url, page);
+  }
+
+  @override
+  Future<APIResult<List<MovieVideo>>> getMovieVideos(int movieId) async {
+    final String url = 'movie/$movieId/videos';
+    try {
+      final response = await http.get(Uri.parse(buildUrl(url: url)));
+      switch (response.statusCode) {
+        case 200:
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+          final data = json.decode(response.body);
+          final results = (data['results'] as List)
+              .map((e) => MovieVideoResponse.fromMap(e))
+              .toList();
+          return APISuccess(results);
+        default:
+        // If the server did not return a 200 OK response,
+        // then return error
+          return APIFailure(Exception('Failed to load movie\'s videos'));
+      }
+    } on Exception catch (ex) {
+      return APIFailure(ex);
+    }
   }
 
   Future<APIResult<List<Movie>>> _getMoviesList(String url, int page) async {

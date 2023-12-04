@@ -4,6 +4,7 @@ import 'package:flutter_movies_reviewer/data/network/api/api.dart';
 import 'package:flutter_movies_reviewer/data/repository/movie_repository_imp.dart';
 import 'package:flutter_movies_reviewer/data/use_cases.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_movie_detail_usecase.dart';
+import 'package:flutter_movies_reviewer/domain/usecase/get_movie_videos_use_case.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_popular_movies_usecase.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_recommend_movies_usecase.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_top_rated_movies_usecase.dart';
@@ -35,19 +36,22 @@ class _AppRootState extends State<AppRoot> {
         GetMovieDetailUseCase(movieRepository: movieRepository);
     final getRecommendMoviesUseCase =
         GetRecommendMoviesUseCase(movieRepository: movieRepository);
+    final getMovieVideosUseCase =
+        GetMovieVideosUseCase(movieRepository: movieRepository);
 
     useCases = UseCases(
-        getPopularMoviesUseCase: getPopularMoviesUseCase,
-        getTopRatedMoviesUseCase: getTopRatedMovieUseCase,
-        getMovieDetailUseCase: getMovieDetailUseCase,
-        getRecommendMoviesUseCase: getRecommendMoviesUseCase);
+      getPopularMoviesUseCase: getPopularMoviesUseCase,
+      getTopRatedMoviesUseCase: getTopRatedMovieUseCase,
+      getMovieDetailUseCase: getMovieDetailUseCase,
+      getRecommendMoviesUseCase: getRecommendMoviesUseCase,
+      getMovieVideosUseCase: getMovieVideosUseCase,
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     const theme = CustomTheme();
-    print('appRoot build');
     return RepositoryProvider.value(
       value: useCases,
       child: MaterialApp(
