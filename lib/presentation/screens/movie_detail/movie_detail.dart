@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movies_reviewer/data/use_cases.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie.dart';
@@ -57,80 +58,82 @@ class MovieDetailWidget extends StatelessWidget {
       ],
       child: Scaffold(
         body: YoutubePlayerScaffold(
+          autoFullScreen: false,
           controller: _controller,
+          lockedOrientations: DeviceOrientation.values,
           builder: (youtubeCtx, player) => SafeArea(
             child: Stack(
               children: [
-                SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        BlocBuilder<GetMovieDetailBloc, GetMovieDetailState>(
-                          builder: (BuildContext context,
-                              GetMovieDetailState state) {
-                            if (state is GetMovieDetailSuccessState) {
-                              final movie = state.movieDetail;
-                              return _Content(movieDetail: movie);
-                            } else if (state is GetMovieDetailFailureState) {
-                              return Center(
-                                child: Text(
-                                  state.exception.toString(),
-                                  style: ts.bodyMedium!
-                                      .copyWith(color: cs.onBackground),
-                                ),
-                              );
-                            } else {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, top: 20, right: 15),
-                          child: BlocBuilder<GetMovieTrailerBloc,
-                              GetMovieTrailerState>(
-                            builder: (context, state) {
-                              if (state is GetMovieTrailerSuccessState) {
-                                _controller.cueVideoById(videoId: state.movieVideo.key ?? "");
-                                return player;
-                              } else {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                Container(
+                  color: cs.background,
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          BlocBuilder<GetMovieDetailBloc, GetMovieDetailState>(
+                            builder: (BuildContext context,
+                                GetMovieDetailState state) {
+                              if (state is GetMovieDetailSuccessState) {
+                                final movie = state.movieDetail;
+                                return _Content(movieDetail: movie);
+                              } else if (state is GetMovieDetailFailureState) {
+                                return Center(
+                                  child: Text(
+                                    state.exception.toString(),
+                                    style: ts.bodyMedium!
+                                        .copyWith(color: cs.onBackground),
+                                  ),
                                 );
+                              } else {
+                                return const SizedBox.shrink();
                               }
                             },
                           ),
-                        ),
-                        BlocBuilder<GetRecommendMoviesBloc,
-                            GetRecommendMoviesState>(
-                          builder: (BuildContext context,
-                              GetRecommendMoviesState state) {
-                            if (state is GetRecommendMovieSuccessState) {
-                              final movies = state.recommendMovies;
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15, top: 20, right: 15),
-                                child: __ContentRecommendMovies(movies: movies),
-                              );
-                            }
-                            if (state is GetRecommendMovieFailureState) {
-                              return Center(
-                                child: Text(
-                                  state.exception.toString(),
-                                  style: ts.bodyMedium!
-                                      .copyWith(color: cs.onBackground),
-                                ),
-                              );
-                            } else {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                          },
-                        ),
-                      ]),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15, top: 20, right: 15),
+                            child: BlocBuilder<GetMovieTrailerBloc,
+                                GetMovieTrailerState>(
+                              builder: (context, state) {
+                                if (state is GetMovieTrailerSuccessState) {
+                                  _controller.cueVideoById(videoId: state.movieVideo.key ?? "");
+                                  return player;
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              },
+                            ),
+                          ),
+                          BlocBuilder<GetRecommendMoviesBloc,
+                              GetRecommendMoviesState>(
+                            builder: (BuildContext context,
+                                GetRecommendMoviesState state) {
+                              if (state is GetRecommendMovieSuccessState) {
+                                final movies = state.recommendMovies;
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, top: 20, right: 15),
+                                  child: __ContentRecommendMovies(movies: movies),
+                                );
+                              }
+                              if (state is GetRecommendMovieFailureState) {
+                                return Center(
+                                  child: Text(
+                                    state.exception.toString(),
+                                    style: ts.bodyMedium!
+                                        .copyWith(color: cs.onBackground),
+                                  ),
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          ),
+                        ]),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, top: 15),
