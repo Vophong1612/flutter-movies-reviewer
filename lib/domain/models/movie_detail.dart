@@ -35,7 +35,7 @@ class MovieDetail extends Equatable {
   final bool? adult;
   final String? backdropPath;
   final int? budget;
-  final List<Genres>? genres;
+  final List<Genre>? genres;
   final String? homepage;
   final int? id;
   final String? imdbId;

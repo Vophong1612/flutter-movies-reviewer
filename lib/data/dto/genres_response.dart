@@ -1,25 +1,18 @@
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
-import 'package:flutter_movies_reviewer/domain/models/genres.dart';
+part 'genres_response.g.dart';
 
-class GenresResponse extends Genres {
-  const GenresResponse({super.id, super.name});
-  factory GenresResponse.fromRawJson(String jsonStr) =>
-      GenresResponse.fromMap(json.decode(jsonStr));
+@JsonSerializable()
+class GenreResponse {
+  const GenreResponse({
+    this.id,
+    this.name,
+  });
 
-  String toRawJson() => json.encode(toMap());
+  final int? id;
+  final String? name;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-    };
-  }
-
-  factory GenresResponse.fromMap(Map<String, dynamic> map) {
-    return GenresResponse(
-        id: map['id'],
-        name: map['name']
-    );
-  }
+  factory GenreResponse.fromJson(Map<String, dynamic> json) =>
+      _$GenreResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$GenreResponseToJson(this);
 }

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class Genres extends Equatable {
-  const Genres({
+class Genre extends Equatable {
+  const Genre({
     this.id,
     this.name,
   });
