@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_movies_reviewer/data/dto/movie_video_response.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie_video.dart';
 import 'package:flutter_movies_reviewer/domain/result.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_movie_videos_use_case.dart';
@@ -27,7 +26,7 @@ class GetMovieTrailerBloc
           result.value.sort((a, b) =>
               CustomDateUtils.getDateTime(a.publishedAt).compareTo(
                   CustomDateUtils.getDateTime(b.publishedAt)));
-          final video = result.value.lastWhere((element) => element.type == "Trailer", orElse: () => const MovieVideoResponse());
+          final video = result.value.lastWhere((element) => element.type == "Trailer", orElse: () => const MovieVideo());
           emit(GetMovieTrailerSuccessState(movieVideo: video));
           break;
         case APIFailure<List<MovieVideo>>():

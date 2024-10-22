@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_movies_reviewer/data/network/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movies_reviewer/data/network/api/api.dart';
+import 'package:flutter_movies_reviewer/data/network/datasources/movie_service.dart';
 import 'package:flutter_movies_reviewer/data/repository/movie_repository_imp.dart';
 import 'package:flutter_movies_reviewer/data/use_cases.dart';
 import 'package:flutter_movies_reviewer/domain/usecase/get_movie_detail_usecase.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_movies_reviewer/domain/usecase/get_recommend_movies_usec
 import 'package:flutter_movies_reviewer/domain/usecase/get_top_rated_movies_usecase.dart';
 import 'package:flutter_movies_reviewer/presentation/router/app_router.dart';
 import 'package:flutter_movies_reviewer/presentation/theme.dart';
+import 'package:logger/logger.dart';
 
 class AppRoot extends StatefulWidget {
   const AppRoot({super.key});
@@ -26,7 +29,30 @@ class _AppRootState extends State<AppRoot> {
   void initState() {
     appRouter = AppRouter();
 
-    final api = ApiImp();
+    final logger = Logger();
+
+    final movieDio = Dio(
+      BaseOptions(
+        receiveTimeout: const Duration(seconds: 30),
+        connectTimeout: const Duration(seconds: 30),
+      ),
+    )..interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          const String apiKey = Constants.accessToken;
+          options.headers[Constants.authorizationKey] = 'Bearer $apiKey';
+
+          logger.d('DioOptions: $options');
+          return handler.next(options);
+        },
+        onError: (error, handler) {
+          logger.e('Dio Error', error: error);
+          handler.next(error);
+        }
+      ),
+    );
+    final api = MovieService(movieDio);
+
     final movieRepository = MovieRepositoryImp(api: api);
     final getPopularMoviesUseCase =
         GetPopularMoviesUseCase(movieRepository: movieRepository);

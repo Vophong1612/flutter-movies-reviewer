@@ -1,78 +1,65 @@
-import 'dart:convert';
-
 import 'package:flutter_movies_reviewer/data/dto/genres_response.dart';
-import 'package:flutter_movies_reviewer/domain/models/movie_detail.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class MovieDetailResponse extends MovieDetail {
+part 'get_movie_detail_response.g.dart';
+
+@JsonSerializable()
+class MovieDetailResponse {
   const MovieDetailResponse({
-      super.adult,
-      super.backdropPath,
-      super.budget,
-      super.genres,
-      super.homepage,
-      super.id,
-      super.imdbId,
-      super.originalLanguage,
-      super.originalTitle,
-      super.overview,
-      super.popularity,
-      super.posterPath,
-      super.productionCompanies,
-      super.productionCountries,
-      super.releaseDate,
-      super.revenue,
-      super.runtime,
-      super.spokenLanguages,
-      super.status,
-      super.tagline,
-      super.title,
-      super.video,
-      super.voteAverage,
-      super.voteCount});
+    this.adult,
+    this.backdropPath,
+    this.budget,
+    this.genres,
+    this.homepage,
+    this.id,
+    this.imdbId,
+    this.originalLanguage,
+    this.originalTitle,
+    this.overview,
+    this.popularity,
+    this.posterPath,
+    this.releaseDate,
+    this.revenue,
+    this.runtime,
+    this.status,
+    this.tagline,
+    this.title,
+    this.video,
+    this.voteAverage,
+    this.voteCount,
+  });
 
-  factory MovieDetailResponse.fromRawJson(String jsonStr) =>
-      MovieDetailResponse.fromMap(json.decode(jsonStr));
+  final bool? adult;
+  @JsonKey(name: 'backdrop_path')
+  final String? backdropPath;
+  final int? budget;
+  final List<GenreResponse>? genres;
+  final String? homepage;
+  final int? id;
+  @JsonKey(name: 'imdb_id')
+  final String? imdbId;
+  @JsonKey(name: 'original_language')
+  final String? originalLanguage;
+  @JsonKey(name: 'original_title')
+  final String? originalTitle;
+  final String? overview;
+  final double? popularity;
+  @JsonKey(name: 'poster_path')
+  final String? posterPath;
+  @JsonKey(name: 'release_date')
+  final String? releaseDate;
+  final int? revenue;
+  final int? runtime;
+  final String? status;
+  final String? tagline;
+  final String? title;
+  final bool? video;
+  @JsonKey(name: 'vote_average')
+  final double? voteAverage;
+  @JsonKey(name: 'vote_count')
+  final int? voteCount;
 
-  String toRawJson() => json.encode(toMap());
-
-  Map<String, dynamic> toMap() {
-    return {
-
-    };
-  }
-
-  factory MovieDetailResponse.fromMap(Map<String, dynamic> map) {
-    List<GenresResponse> genres = [];
-    List<dynamic> genresJson = map['genres'];
-    for (var genre in genresJson) {
-      genres.add(GenresResponse.fromMap(genre));
-    }
-
-    return MovieDetailResponse(
-      adult: map['adult'],
-      backdropPath: map['backdrop_path'],
-      budget: map['budget'],
-      genres: genres,
-      homepage: map['homepage'],
-      id: map['id'],
-      imdbId: map['imdb_id'],
-      originalLanguage: map['original_language'],
-      originalTitle: map['original_title'],
-      overview: map['overview'],
-      popularity: map['popularity'],
-      posterPath: map['poster_path'],
-      //production_companies,
-        // production_countries,
-      releaseDate: map['release_date'],
-      revenue: map['revenue'],
-      runtime: map['runtime'],
-      //spokenLanguagues: spoken_languages
-      status: map['status'],
-      tagline: map['tagline'],
-      title: map['title'],
-      video: map['video'],
-      voteAverage: map['vote_average'],
-      voteCount: map['vote_count']
-    );
-  }
+  factory MovieDetailResponse.fromJson(Map<String, dynamic> json) =>
+      _$MovieDetailResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$MovieDetailResponseToJson(this);
 }
