@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_movies_reviewer/data/network/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,18 +32,24 @@ class _AppRootState extends State<AppRoot> {
 
     final logger = Logger();
 
+    String apiUrl = dotenv.env[Constants.apiUrl] ?? '';
     final movieDio = Dio(
       BaseOptions(
+        baseUrl: apiUrl,
         receiveTimeout: const Duration(seconds: 30),
         connectTimeout: const Duration(seconds: 30),
       ),
     )..interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          const String apiKey = Constants.accessToken;
-          options.headers[Constants.authorizationKey] = 'Bearer $apiKey';
+          String appToken = dotenv.env[Constants.appToken] ?? '';
+          options.headers[Constants.authorizationKey] = 'Bearer $appToken';
 
-          logger.d('DioOptions: $options');
+          logger.d('Method: ${options.method}');
+          logger.d('Header: ${options.headers}');
+          if (options.data != null) {
+            logger.d('Body: ${options.data}');
+          }
           return handler.next(options);
         },
         onError: (error, handler) {
