@@ -2,12 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter_movies_reviewer/data/dto/get_movie_detail_response.dart';
 import 'package:flutter_movies_reviewer/data/dto/get_movie_video_response.dart';
 import 'package:flutter_movies_reviewer/data/dto/get_movies_list_response.dart';
-import 'package:flutter_movies_reviewer/data/network/constants.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'movie_service.g.dart';
 
-@RestApi(baseUrl: Constants.apiUrl)
+@RestApi()
 abstract class MovieService {
   factory MovieService(Dio dio, {String? baseUrl}) = _MovieService;
 
