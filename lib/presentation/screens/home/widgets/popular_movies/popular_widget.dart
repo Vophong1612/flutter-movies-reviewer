@@ -66,9 +66,9 @@ class PopularWidget extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  cs.background.withOpacity(0.8),
-                  cs.background.withOpacity(0.6),
-                  cs.background.withOpacity(0),
+                  cs.surface.withOpacity(0.8),
+                  cs.surface.withOpacity(0.6),
+                  cs.surface.withOpacity(0),
                 ],
               ),
             ),
@@ -77,7 +77,7 @@ class PopularWidget extends StatelessWidget {
               child: Text(
                 "Popular Movies",
                 style: ts.titleLarge!.copyWith(
-                  color: cs.onBackground,
+                  color: cs.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -90,7 +90,7 @@ class PopularWidget extends StatelessWidget {
 }
 
 class _Content extends StatefulWidget {
-  const _Content({super.key, required this.movies});
+  const _Content({required this.movies});
 
   final List<Movie> movies;
 

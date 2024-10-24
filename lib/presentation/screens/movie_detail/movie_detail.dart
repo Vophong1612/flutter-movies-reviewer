@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movies_reviewer/data/use_cases.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie.dart';
 import 'package:flutter_movies_reviewer/domain/models/movie_detail.dart';
 import 'package:flutter_movies_reviewer/domain/utils/image_utils.dart';
 import 'package:flutter_movies_reviewer/domain/utils/number_utils.dart';
+import 'package:flutter_movies_reviewer/injection.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/home/widgets/top_rated_movies/top_rated_widget_item.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/movie_detail/bloc/get_movie_detail/movie_detail_bloc.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/movie_detail/bloc/get_movie_trailer/get_movie_trailer_bloc.dart';
@@ -41,19 +41,13 @@ class MovieDetailWidget extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<GetMovieDetailBloc>(
-            create: (ctx) => GetMovieDetailBloc(
-                getMovieDetailUseCase:
-                    ctx.read<UseCases>().getMovieDetailUseCase)
+            create: (_) => locator<GetMovieDetailBloc>()
               ..add(GetMovieDetailEvent(movieId: movieId))),
         BlocProvider<GetRecommendMoviesBloc>(
-            create: (ctx) => GetRecommendMoviesBloc(
-                getRecommendMoviesUseCase:
-                    ctx.read<UseCases>().getRecommendMoviesUseCase)
+            create: (_) => locator<GetRecommendMoviesBloc>()
               ..add(GetRecommendMoviesEvent(movieId: movieId))),
         BlocProvider<GetMovieTrailerBloc>(
-            create: (ctx) => GetMovieTrailerBloc(
-                getMovieVideosUseCase:
-                    ctx.read<UseCases>().getMovieVideosUseCase)
+            create: (_) => locator<GetMovieTrailerBloc>()
               ..add(GetMovieTrailerEvent(movieId: movieId))),
       ],
       child: Scaffold(
@@ -68,7 +62,7 @@ class MovieDetailWidget extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 ),
                 Container(
-                  color: cs.background,
+                  color: cs.surface,
                   child: SingleChildScrollView(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,7 +78,7 @@ class MovieDetailWidget extends StatelessWidget {
                                   child: Text(
                                     state.exception.toString(),
                                     style: ts.bodyMedium!
-                                        .copyWith(color: cs.onBackground),
+                                        .copyWith(color: cs.onSurface),
                                   ),
                                 );
                               } else {
@@ -124,7 +118,7 @@ class MovieDetailWidget extends StatelessWidget {
                                   child: Text(
                                     state.exception.toString(),
                                     style: ts.bodyMedium!
-                                        .copyWith(color: cs.onBackground),
+                                        .copyWith(color: cs.onSurface),
                                   ),
                                 );
                               } else {
@@ -160,7 +154,7 @@ class MovieDetailWidget extends StatelessWidget {
 class _Content extends StatelessWidget {
   final MovieDetail movieDetail;
 
-  const _Content({super.key, required this.movieDetail});
+  const _Content({required this.movieDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +177,7 @@ class _Content extends StatelessWidget {
 }
 
 class __ContentPoster extends StatelessWidget {
-  const __ContentPoster({super.key, required this.path});
+  const __ContentPoster({required this.path});
 
   final String? path;
 
@@ -225,9 +219,9 @@ class __ContentPoster extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                  cs.background.withOpacity(0),
-                  cs.background.withOpacity(0.3),
-                  cs.background,
+                  cs.surface.withOpacity(0),
+                  cs.surface.withOpacity(0.3),
+                  cs.surface,
                 ])),
           ),
         )
@@ -239,7 +233,7 @@ class __ContentPoster extends StatelessWidget {
 class __ContentMovieInfo extends StatelessWidget {
   final MovieDetail movieDetail;
 
-  const __ContentMovieInfo({super.key, required this.movieDetail});
+  const __ContentMovieInfo({required this.movieDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +278,7 @@ class __ContentMovieInfo extends StatelessWidget {
                         Text(
                           movieDetail.genresText,
                           style:
-                              ts.bodyMedium!.copyWith(color: cs.onBackground),
+                              ts.bodyMedium!.copyWith(color: cs.onSurface),
                         )
                       ],
                     ),
@@ -331,7 +325,7 @@ class __ContentMovieInfo extends StatelessWidget {
 class __ContentOverview extends StatefulWidget {
   final String? overview;
 
-  const __ContentOverview({super.key, required this.overview});
+  const __ContentOverview({required this.overview});
 
   @override
   State<__ContentOverview> createState() {
@@ -366,7 +360,7 @@ class ___ContentOverviewState extends State<__ContentOverview> {
           onTap: _switchShowMore,
           child: Text(
             widget.overview ?? "Movie has no overview.",
-            style: ts.bodyMedium!.copyWith(color: cs.onBackground),
+            style: ts.bodyMedium!.copyWith(color: cs.onSurface),
             maxLines: showMore ? null : 4,
             overflow: showMore ? null : TextOverflow.ellipsis,
           ),
@@ -379,7 +373,7 @@ class ___ContentOverviewState extends State<__ContentOverview> {
 class __ContentRecommendMovies extends StatelessWidget {
   final List<Movie> movies;
 
-  const __ContentRecommendMovies({super.key, required this.movies});
+  const __ContentRecommendMovies({required this.movies});
 
   @override
   Widget build(BuildContext context) {
@@ -421,16 +415,6 @@ class __ContentRecommendMovies extends StatelessWidget {
                 ),
               ),
       ],
-    );
-  }
-}
-
-class _CircularProgressIndicator extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(),
     );
   }
 }
