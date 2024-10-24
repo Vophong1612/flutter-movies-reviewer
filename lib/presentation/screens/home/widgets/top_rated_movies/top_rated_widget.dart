@@ -22,7 +22,7 @@ class TopRatedWidget extends StatelessWidget {
             child: Text(
               "TopRated Movies",
               style: ts.titleLarge!.copyWith(
-                color: cs.onBackground,
+                color: cs.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -61,7 +61,7 @@ class TopRatedWidget extends StatelessWidget {
 }
 
 class _Content extends StatefulWidget {
-  const _Content({super.key, required this.movies});
+  const _Content({required this.movies});
 
   final List<Movie> movies;
 

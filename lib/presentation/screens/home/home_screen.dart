@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movies_reviewer/data/use_cases.dart';
+import 'package:flutter_movies_reviewer/injection.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/home/bloc/get_popular_movies/popular_movies_bloc.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/home/bloc/get_toprated_movies/toprated_movies_bloc.dart';
 import 'package:flutter_movies_reviewer/presentation/screens/home/widgets/popular_movies/popular_widget.dart';
@@ -21,10 +21,11 @@ class HomeScreen extends StatelessWidget {
             children: [
               Expanded(child: PopularWidget()),
               Expanded(
-                  child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: TopRatedWidget(),
-              )),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30.0),
+                  child: TopRatedWidget(),
+                ),
+              ),
             ],
           )
         : const Column(
@@ -37,16 +38,12 @@ class HomeScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<PopularMoviesBloc>(
-          create: (popularMovieCtx) => PopularMoviesBloc(
-              getPopularMoviesUseCase:
-                  popularMovieCtx.read<UseCases>().getPopularMoviesUseCase)
-            ..add(GetPopularMoviesEvent()),
+          create: (_) =>
+              locator<PopularMoviesBloc>()..add(GetPopularMoviesEvent()),
         ),
         BlocProvider<TopRatedMoviesBloc>(
-          create: (topRatedMovieCtx) => TopRatedMoviesBloc(
-              getTopRatedMoviesUseCase:
-                  topRatedMovieCtx.read<UseCases>().getTopRatedMoviesUseCase)
-            ..add(GetTopRatedMoviesEvent()),
+          create: (_) =>
+              locator<TopRatedMoviesBloc>()..add(GetTopRatedMoviesEvent()),
         ),
       ],
       child: Scaffold(
