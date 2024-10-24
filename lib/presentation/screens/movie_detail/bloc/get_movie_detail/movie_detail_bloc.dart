@@ -11,32 +11,25 @@ part 'movie_detail_event.dart';
 
 part 'movie_detail_state.dart';
 
-class GetMovieDetailBloc
-    extends Bloc<MovieDetailEvent, GetMovieDetailState> {
-  GetMovieDetailBloc({required GetMovieDetailUseCase getMovieDetailUseCase})
-      : _getMovieDetailUseCase = getMovieDetailUseCase,
-        super(GetMovieDetailInitialState()) {
-    on<GetMovieDetailEvent>((event, emit) async {
-      emit(GetMovieDetailLoadingState());
-
-      final movieDetailResult = await _getMovieDetail(event.movieId);
-      switch (movieDetailResult) {
-        case APISuccess<MovieDetail>():
-          final detail = movieDetailResult.value;
-          emit(GetMovieDetailSuccessState(movieDetail: detail));
-          break;
-        case APIFailure<MovieDetail>():
-          final ex = movieDetailResult.exception;
-          emit(GetMovieDetailFailureState(exception: ex));
-          break;
-      }
-    });
+class GetMovieDetailBloc extends Bloc<MovieDetailEvent, GetMovieDetailState> {
+  GetMovieDetailBloc(this._getMovieDetailUseCase) : super(GetMovieDetailInitialState()) {
+    on<GetMovieDetailEvent>(_getMovieDetail);
   }
 
   final GetMovieDetailUseCase _getMovieDetailUseCase;
 
-  Future<APIResult<MovieDetail>> _getMovieDetail(int movieId) async {
-    final list = await _getMovieDetailUseCase.invoke(movieId: movieId);
-    return list;
+  Future<void> _getMovieDetail(GetMovieDetailEvent event, Emitter<GetMovieDetailState> emit) async {
+    emit(GetMovieDetailLoadingState());
+    final movieDetailResult = await _getMovieDetailUseCase.invoke(movieId: event.movieId);
+    switch (movieDetailResult) {
+      case APISuccess<MovieDetail>():
+        final detail = movieDetailResult.value;
+        emit(GetMovieDetailSuccessState(movieDetail: detail));
+        break;
+      case APIFailure<MovieDetail>():
+        final ex = movieDetailResult.exception;
+        emit(GetMovieDetailFailureState(exception: ex));
+        break;
+    }
   }
 }

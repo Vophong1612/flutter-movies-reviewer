@@ -11,36 +11,25 @@ part 'toprated_movies_event.dart';
 
 part 'toprated_movies_state.dart';
 
-class TopRatedMoviesBloc
-    extends Bloc<TopRatedMoviesEvent, TopRatedMoviesState> {
-  TopRatedMoviesBloc({
-    required GetTopRatedMoviesUseCase getTopRatedMoviesUseCase,
-  })  : _getTopRatedMoviesUseCase = getTopRatedMoviesUseCase,
-        super(TopRatedInitialState()) {
-    on<TopRatedMoviesEvent>((event, emit) async {
-      emit(TopRatedInitialState());
-      final popularMoviesResult = await _getTopRatedMovies(event, emit);
-
-      switch (popularMoviesResult) {
-        case APISuccess<List<Movie>>():
-          final list = popularMoviesResult.value;
-          emit(TopRatedSuccessState(movies: list));
-          break;
-        case APIFailure<List<Movie>>():
-          final ex = popularMoviesResult.exception;
-          emit(TopRatedMoviesFailureState(exception: ex));
-          break;
-      }
-    });
+class TopRatedMoviesBloc extends Bloc<TopRatedMoviesEvent, TopRatedMoviesState> {
+  TopRatedMoviesBloc(this._getTopRatedMoviesUseCase) : super(TopRatedInitialState()) {
+    on<TopRatedMoviesEvent>(_getTopRatedMovies);
   }
 
   final GetTopRatedMoviesUseCase _getTopRatedMoviesUseCase;
 
-  Future<APIResult<List<Movie>>> _getTopRatedMovies(
-    TopRatedMoviesEvent event,
-    Emitter<TopRatedMoviesState> emit,
-  ) async {
-    final list = await _getTopRatedMoviesUseCase.invoke();
-    return list;
+  Future<void> _getTopRatedMovies(TopRatedMoviesEvent event, Emitter<TopRatedMoviesState> emit) async {
+    emit(TopRatedInitialState());
+    final popularMoviesResult = await _getTopRatedMoviesUseCase.invoke();
+    switch (popularMoviesResult) {
+      case APISuccess<List<Movie>>():
+        final list = popularMoviesResult.value;
+        emit(TopRatedSuccessState(movies: list));
+        break;
+      case APIFailure<List<Movie>>():
+        final ex = popularMoviesResult.exception;
+        emit(TopRatedMoviesFailureState(exception: ex));
+        break;
+    }
   }
 }

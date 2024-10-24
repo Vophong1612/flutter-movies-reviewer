@@ -7,6 +7,6 @@ class GetMovieVideosUseCase {
 
   GetMovieVideosUseCase({required this.movieRepository});
 
-  Future<APIResult<List<MovieVideo>>> invoice(int movieId) =>
+  Future<APIResult<List<MovieVideo>>> invoke(int movieId) =>
       movieRepository.getMovieVideos(movieId: movieId);
 }

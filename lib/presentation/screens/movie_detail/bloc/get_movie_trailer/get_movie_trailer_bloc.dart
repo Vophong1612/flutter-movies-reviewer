@@ -12,33 +12,26 @@ part 'get_movie_trailer_event.dart';
 
 part 'get_movie_trailer_state.dart';
 
-class GetMovieTrailerBloc
-    extends Bloc<MovieTrailerEvent, GetMovieTrailerState> {
-  GetMovieTrailerBloc({required GetMovieVideosUseCase getMovieVideosUseCase})
-      : _getMovieVideosUseCase = getMovieVideosUseCase,
-        super(GetMovieTrailerInitialState()) {
-    on<GetMovieTrailerEvent>((event, emit) async {
-      emit(GetMovieTrailerLoadingState());
-
-      final result = await _getMovieVideos(event.movieId);
-      switch (result) {
-        case APISuccess<List<MovieVideo>>():
-          result.value.sort((a, b) =>
-              CustomDateUtils.getDateTime(a.publishedAt).compareTo(
-                  CustomDateUtils.getDateTime(b.publishedAt)));
-          final video = result.value.lastWhere((element) => element.type == "Trailer", orElse: () => const MovieVideo());
-          emit(GetMovieTrailerSuccessState(movieVideo: video));
-          break;
-        case APIFailure<List<MovieVideo>>():
-          emit(GetMovieTrailerErrorState(exception: result.exception));
-          break;
-      }
-    });
+class GetMovieTrailerBloc extends Bloc<MovieTrailerEvent, GetMovieTrailerState> {
+  GetMovieTrailerBloc(this._getMovieVideosUseCase) : super(GetMovieTrailerInitialState()) {
+    on<GetMovieTrailerEvent>(_getMovieVideos);
   }
 
   final GetMovieVideosUseCase _getMovieVideosUseCase;
 
-  Future<APIResult<List<MovieVideo>>> _getMovieVideos(int movieId) async {
-    return await _getMovieVideosUseCase.invoice(movieId);
+  Future<void> _getMovieVideos(GetMovieTrailerEvent event, Emitter<GetMovieTrailerState> emit) async {
+    emit(GetMovieTrailerLoadingState());
+    final result = await _getMovieVideosUseCase.invoke(event.movieId);
+    switch (result) {
+      case APISuccess<List<MovieVideo>>():
+        result.value.sort(
+            (a, b) => CustomDateUtils.getDateTime(a.publishedAt).compareTo(CustomDateUtils.getDateTime(b.publishedAt)));
+        final video = result.value.lastWhere((element) => element.type == "Trailer", orElse: () => const MovieVideo());
+        emit(GetMovieTrailerSuccessState(movieVideo: video));
+        break;
+      case APIFailure<List<MovieVideo>>():
+        emit(GetMovieTrailerErrorState(exception: result.exception));
+        break;
+    }
   }
 }

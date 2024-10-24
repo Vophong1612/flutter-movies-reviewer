@@ -68,16 +68,11 @@ void init() {
   locator.registerLazySingleton<UseCases>(() {
     final movieRepository = locator<MovieRepository>();
 
-    final getPopularMoviesUseCase =
-        GetPopularMoviesUseCase(movieRepository: movieRepository);
-    final getTopRatedMovieUseCase =
-        GetTopRatedMoviesUseCase(movieRepository: movieRepository);
-    final getMovieDetailUseCase =
-        GetMovieDetailUseCase(movieRepository: movieRepository);
-    final getRecommendMoviesUseCase =
-        GetRecommendMoviesUseCase(movieRepository: movieRepository);
-    final getMovieVideosUseCase =
-        GetMovieVideosUseCase(movieRepository: movieRepository);
+    final getPopularMoviesUseCase = GetPopularMoviesUseCase(movieRepository: movieRepository);
+    final getTopRatedMovieUseCase = GetTopRatedMoviesUseCase(movieRepository: movieRepository);
+    final getMovieDetailUseCase = GetMovieDetailUseCase(movieRepository: movieRepository);
+    final getRecommendMoviesUseCase = GetRecommendMoviesUseCase(movieRepository: movieRepository);
+    final getMovieVideosUseCase = GetMovieVideosUseCase(movieRepository: movieRepository);
 
     return UseCases(
       getPopularMoviesUseCase: getPopularMoviesUseCase,
@@ -90,30 +85,26 @@ void init() {
 
   locator.registerFactory<PopularMoviesBloc>(() {
     final getPopularMoviesUseCase = locator<UseCases>().getPopularMoviesUseCase;
-    return PopularMoviesBloc(getPopularMoviesUseCase: getPopularMoviesUseCase);
+    return PopularMoviesBloc(getPopularMoviesUseCase);
   });
 
   locator.registerFactory<TopRatedMoviesBloc>(() {
-    final getTopRatedMoviesUseCase =
-        locator<UseCases>().getTopRatedMoviesUseCase;
-    return TopRatedMoviesBloc(
-        getTopRatedMoviesUseCase: getTopRatedMoviesUseCase);
+    final getTopRatedMoviesUseCase = locator<UseCases>().getTopRatedMoviesUseCase;
+    return TopRatedMoviesBloc(getTopRatedMoviesUseCase);
   });
 
   locator.registerFactory<GetMovieDetailBloc>(() {
     final getMovieDetailUseCase = locator<UseCases>().getMovieDetailUseCase;
-    return GetMovieDetailBloc(getMovieDetailUseCase: getMovieDetailUseCase);
+    return GetMovieDetailBloc(getMovieDetailUseCase);
   });
 
   locator.registerFactory<GetRecommendMoviesBloc>(() {
-    final getRecommendMoviesUseCase =
-        locator<UseCases>().getRecommendMoviesUseCase;
-    return GetRecommendMoviesBloc(
-        getRecommendMoviesUseCase: getRecommendMoviesUseCase);
+    final getRecommendMoviesUseCase = locator<UseCases>().getRecommendMoviesUseCase;
+    return GetRecommendMoviesBloc(getRecommendMoviesUseCase);
   });
 
   locator.registerFactory<GetMovieTrailerBloc>(() {
     final getMovieVideosUseCase = locator<UseCases>().getMovieVideosUseCase;
-    return GetMovieTrailerBloc(getMovieVideosUseCase: getMovieVideosUseCase);
+    return GetMovieTrailerBloc(getMovieVideosUseCase);
   });
 }
